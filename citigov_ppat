@@ -1,0 +1,37 @@
+it('login user', function() {
+  cy.visit('https://test.citigov.id')
+  cy.get('.btn-navbar-menu.start-now').click()
+  cy.get('.citizen-input-login-otp').type('rizki.hidayat@cartenz.co.id')
+  cy.get('.btn.btn-lg.btn-block.btn-active').click()
+
+  cy.wait(9000)
+  cy.get('.btn.btn-green-outline[data-dismiss="modal"]').eq(0).click({ force: true })
+  cy.wait(5000)
+  cy.request('GET', 'https://test.api.citigov.id/auth/otp/request/rizki.hidayat@cartenz.co.id').then(
+  (response) => {
+    console.log(response.body);
+    var otpNumber = response.body.data.otp.split('');
+    cy.get('input[name="otp1"]').type(otpNumber[0])
+    cy.get('input[name="otp2"]').type(otpNumber[1])
+    cy.get('input[name="otp3"]').type(otpNumber[2])
+    cy.get('input[name="otp4"]').type(otpNumber[3])  
+  }
+)
+  cy.wait(5000)
+  cy.get('.citizen-btn-blue-lg').click()
+  cy.visit('https://test.citigov.id/ppat')
+  cy.wait(5000)
+  cy.get('.ppat-box-action-btn').click({ force: true })
+  cy.get('.ppat-pelayanan-select').eq(0).click() //Kabupaten demo
+  cy.get('#react-select-2-option-0').click()
+ 
+  cy.get('[type="radio"]').check('WP11', { force: true })
+  /*cy.get('input[name="nik1"]').click()
+  cy.get('input[name="nik1"]').type('1234567890123456')
+  cy.get('input[name="nama_lengkap1"]').type('Rizki Hidayat')*/
+  cy.get('input[name="alamat1"]').click().get('input[name="alamat1"]').type('Rizki Hidayat',{ force: true })
+
+  /*cy.get('.form-control.ppat-register-input').type('Rizki')*/
+
+}
+)
